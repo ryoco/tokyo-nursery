@@ -1,0 +1,4 @@
+.ruby-version
+*.swo
+*.swp
+.bundle/

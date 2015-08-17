@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html> 
+<head> 
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" /> 
+  <title>Non-authorized Nursery map</title>
+  <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+  <script src="http://maps.google.com/maps/api/js?sensor=false" 
+          type="text/javascript"></script>
+</head> 
+<body>
+  <div class="container">
+    <h2>Non-authorized Nursery map</h2>
+    <div id="map" style="width: 900px; height: 500px;"></div>
+    <div>
+      <dl>
+        <dt>green</dt><dd>tax-free</dd>
+        <dt>red</dt><dd>not tax-free</dd>
+      </dl>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    /*
+    var unauth_loc = [
+      [1, 'nursery_name', -33.80010128657071, 151.28747820854187, info],
+    ];
+    */
+    var unauth_nurs = <%= unauth_loc %>;
+    var no_tax_unauth_nurs = <%= no_tax_unauth_loc %>;
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 11,
+      center: new google.maps.LatLng(35.658099, 139.741357),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    function draw_markers(locations, color) {
+      for (i = 0; i < locations.length; i++) {  
+        marker = new google.maps.Marker({
+          position: new google.maps.LatLng(locations[i][2], locations[i][3]),
+          map: map,
+          icon: {
+            strokeColor: color,
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 5
+          },
+        });
+
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+          return function() {
+            var contentString = '<p><a href="/' + locations[i][0] + '">' + 
+                                locations[i][1] + '</a></p><p>' + locations[i][4] + "</p>";
+            infowindow.setContent(contentString);
+            infowindow.open(map, marker);
+            infowindow.open(map, marker);
+          }
+        })(marker, i));
+      }
+    }
+
+    draw_markers(unauth_nurs, "red");
+    draw_markers(no_tax_unauth_nurs, "green");
+
+  </script>
+</body>
+</html>
