@@ -52,7 +52,7 @@
 
         google.maps.event.addListener(marker, 'click', (function(marker, i) {
           return function() {
-            var contentString = '<p><a href="/' + locations[i][0] + '">' + 
+            var contentString = '<p><a href="/detail/' + locations[i][0] + '">' + 
                                 locations[i][1] + '</a></p><p>' + locations[i][4] + "</p>";
             infowindow.setContent(contentString);
             infowindow.open(map, marker);

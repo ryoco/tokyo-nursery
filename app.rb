@@ -8,18 +8,18 @@ require "redis"
 ## TODO: remove to_i
 class TokyoNursery < Sinatra::Base
 
-  # TODO: use redis
   def get_locations
+    redis = Redis.new
     no_tax = []
     tax = []
-    read_csv = CSV.read("./csv_data/nursery_data.csv", {headers: true, return_headers: true})
-    read_csv.each do |csv|
-      if !csv.header_row?() and csv[14] != nil and csv[15] != nil
-        if csv[12] == "有"
-          no_tax.push([csv[0].to_i, csv[1], csv[14], csv[15], csv[4]])
-        else
-          tax.push([csv[0].to_i, csv[1], csv[14], csv[15], csv[4]])
-        end
+    redis.lrange("nursery_keys", 0, -1).each do |key|
+      row_data = redis.lrange(key, 0, -1)
+      data = [row_data[0], row_data[1], row_data[14], row_data[15], row_data[4]]
+      data = data.map{|a| a.nil? ? "" : a}
+      if row_data[12] == "有"
+        no_tax.push(data)
+      else
+        tax.push(data)
       end
     end
     [tax, no_tax]
@@ -30,7 +30,9 @@ class TokyoNursery < Sinatra::Base
     if redis.dbsize <= 0
       read_csv = CSV.read("./csv_data/nursery_data.csv", {headers: false})
       read_csv.each do |csv|
-        redis.rpush('nurseries-%d' % [csv[0].to_i], csv.to_a)
+        key = "nurseries-%d" % csv[0]
+        redis.lpush("nursery_keys", key)
+        redis.lpush(key, csv.to_a.reverse)
       end
     end
   end
@@ -42,6 +44,7 @@ class TokyoNursery < Sinatra::Base
     
 
   get '/' do
+    csv_to_redis
     unauth_loc, no_tax_unauth_loc = get_locations
     erb :index,
         :locals => {
@@ -50,8 +53,7 @@ class TokyoNursery < Sinatra::Base
         }
   end
   
-  get '/:number' do |num|
-    csv_to_redis
+  get '/detail/:number' do |num|
     nu_data = get_csv_row(num)
     erb :detail,
         :locals => { 

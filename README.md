@@ -20,8 +20,3 @@ You need to lunch redis.
 ```
 
 then, access http://localhost:9292
-
-## TODO
-
-* Fix reading css every time get index request.
-* Usage of Redis.
