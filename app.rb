@@ -12,7 +12,7 @@ class TokyoNursery < Sinatra::Base
     redis = Redis.new
     no_tax = []
     tax = []
-    redis.lrange("nursery_keys", 0, -1).each do |key|
+    redis.keys("nurseries-*").each do |key|
       row_data = redis.lrange(key, 0, -1)
       data = [row_data[0], row_data[1], row_data[14], row_data[15], row_data[4]]
       data = data.map{|a| a.nil? ? "" : a}
@@ -31,7 +31,6 @@ class TokyoNursery < Sinatra::Base
       read_csv = CSV.read("./csv_data/nursery_data.csv", {headers: false})
       read_csv.each do |csv|
         key = "nurseries-%d" % csv[0]
-        redis.lpush("nursery_keys", key)
         redis.lpush(key, csv.to_a.reverse)
       end
     end
@@ -66,7 +65,7 @@ class TokyoNursery < Sinatra::Base
           nursery_company: nu_data[5],
           nursery_start_time: nu_data[6],
           nursery_end_time: nu_data[7],
-          nursery_capacity: nu_data[9],
+          nursery_capacity: nu_data[9].to_i,
           nursery_start_date: nu_data[10],
           nursery_phone_num: nu_data[11],
           nursery_tax: nu_data[12],
