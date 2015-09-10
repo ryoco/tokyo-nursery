@@ -10,7 +10,7 @@ You need to make a csv file.
 Please download the [tokyo non-authorized nursery excel](http://www.fukushihoken.metro.tokyo.jp/kodomo/hoiku/ninkagai/babyichiran_koukai.html) file.
 
 ```
-  bundle exec ruby_scripts/excel_to_csv.rb baby.xls
+  bundle exec ruby_scripts/get_geo.rb baby.xls
 ```
 
 You need to lunch redis.
