@@ -2,20 +2,25 @@
 <html> 
 <head> 
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" /> 
-  <title>Non-authorized Nursery map</title>
+  <title>東京都認可外保育施設マップ</title>
   <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
   <script src="http://maps.google.com/maps/api/js?sensor=false" 
           type="text/javascript"></script>
 </head> 
 <body>
   <div class="container">
-    <h2>Non-authorized Nursery map</h2>
+    <h2>東京都認可外保育施設マップ</h2>
     <div id="map" style="width: 900px; height: 500px;"></div>
     <div>
-      <dl>
-        <dt>green</dt><dd>tax-free</dd>
-        <dt>red</dt><dd>not tax-free</dd>
-      </dl>
+      <ul>
+<li>東京都の認可外保育施設のマップです。個人で運営しているサイトになります。</li>
+<li>東京都福祉保健局<a href="http://www.fukushihoken.metro.tokyo.jp/kodomo/hoiku/ninkagai/babyichiran_koukai.html" target="_blank">認可外保育施設（ベビーホテル・その他）一覧の公開と利用する際の留意点</a>のベビーホテルの方を表示しています。</li>
+<li>指導監督基準を満たす旨の証明書のある施設は消費税が非課税となっており、<span style="color:green">緑色</span>で表示しています。</li>
+<li>それ以外は<span style="color:red">赤色</span>で表示しています。</li>
+<li>是非<a href="http://www.fukushihoken.metro.tokyo.jp/kodomo/hoiku/ninkagai/tatiiri.html" target="_blank">認可外保育施設(ベビーホテル等）立入調査結果</a>もご参考ください。</li>
+<li>その他詳しくは東京都福祉保健局<a href="http://www.fukushihoken.metro.tokyo.jp/kodomo/hoiku/ninkagai/index.html" target="_blank">認可外保育施設 について</a>をご覧ください。</li>
+<li>当サイトの情報によって生じる損害については一切の責任を負いかねます。</li>
+      </ul>
     </div>
   </div>
 
@@ -36,9 +41,9 @@
 
     var infowindow = new google.maps.InfoWindow();
 
-    var marker, i;
 
     function draw_markers(locations, color) {
+      var marker, i;
       for (i = 0; i < locations.length; i++) {  
         marker = new google.maps.Marker({
           position: new google.maps.LatLng(locations[i][2], locations[i][3]),
@@ -52,10 +57,9 @@
 
         google.maps.event.addListener(marker, 'click', (function(marker, i) {
           return function() {
-            var contentString = '<p><a href="/detail/' + locations[i][0] + '">' + 
+            var contentString = '<p><a href="/detail/' + locations[i][0] + '" target="_blank">' + 
                                 locations[i][1] + '</a></p><p>' + locations[i][4] + "</p>";
             infowindow.setContent(contentString);
-            infowindow.open(map, marker);
             infowindow.open(map, marker);
           }
         })(marker, i));
