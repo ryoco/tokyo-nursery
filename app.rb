@@ -49,29 +49,29 @@ class TokyoNursery < Sinatra::Base
   get '/' do
     unauth_loc, no_tax_unauth_loc = get_locations
     erb :index,
-        :locals => {
-          :unauth_loc => unauth_loc,
-          :no_tax_unauth_loc => no_tax_unauth_loc
+        locals: {
+          unauth_loc: unauth_loc,
+          no_tax_unauth_loc:  no_tax_unauth_loc,
         }
   end
   
   get '/detail/:number' do |num|
     nu_data = get_csv_row(num)
     erb :detail,
-        :locals => { 
-          :nursery_name => nu_data[1],
-          :nursery_block => nu_data[2],
-          :nursery_address => nu_data[3],
-          :nursery_station => nu_data[4],
-          :nursery_company => nu_data[5],
-          :nursery_start_time => nu_data[6],
-          :nursery_end_time => nu_data[7],
-          :nursery_capacity => nu_data[9],
-          :nursery_start_date => nu_data[10],
-          :nursery_phone_num => nu_data[11],
-          :nursery_tax => nu_data[12],
-          :nursery_note => nu_data[13],
-    }
+        locals: { 
+          nursery_name: nu_data[1],
+          nursery_block: nu_data[2],
+          nursery_address: nu_data[3],
+          nursery_station: nu_data[4],
+          nursery_company: nu_data[5],
+          nursery_start_time: nu_data[6],
+          nursery_end_time: nu_data[7],
+          nursery_capacity: nu_data[9],
+          nursery_start_date: nu_data[10],
+          nursery_phone_num: nu_data[11],
+          nursery_tax: nu_data[12],
+          nursery_note: nu_data[13],
+        }
   end
 
 end
