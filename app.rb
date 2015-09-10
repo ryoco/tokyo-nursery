@@ -42,9 +42,11 @@ class TokyoNursery < Sinatra::Base
     redis.lrange("nurseries-%d" % [num], 0, -1)
   end
     
+  before do
+    csv_to_redis
+  end
 
   get '/' do
-    csv_to_redis
     unauth_loc, no_tax_unauth_loc = get_locations
     erb :index,
         :locals => {
