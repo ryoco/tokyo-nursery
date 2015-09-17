@@ -3,6 +3,7 @@ source "https://rubygems.org"
 
 gem 'sinatra'
 gem "redis", "~> 3.0.1"
+gem "hiredis", "~> 0.6.0"
 
 # for scripts
 gem 'nokogiri', '~> 1.6.6.2'

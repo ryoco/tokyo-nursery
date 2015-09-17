@@ -9,7 +9,7 @@ require "redis"
 class TokyoNursery < Sinatra::Base
 
   def get_locations
-    redis = Redis.new
+    redis = Redis.new(:driver => :hiredis)
     no_tax = []
     tax = []
     redis.keys("nurseries-*").each do |key|
@@ -26,7 +26,7 @@ class TokyoNursery < Sinatra::Base
   end
 
   def csv_to_redis
-    redis = Redis.new
+    redis = Redis.new(:driver => :hiredis)
     if redis.dbsize <= 0
       read_csv = CSV.read("./csv_data/nursery_data.csv", {headers: false})
       read_csv.each do |csv|
@@ -37,7 +37,7 @@ class TokyoNursery < Sinatra::Base
   end
 
   def get_csv_row(num)
-    redis = Redis.new
+    redis = Redis.new(:driver => :hiredis)
     redis.lrange("nurseries-%d" % [num], 0, -1)
   end
     
