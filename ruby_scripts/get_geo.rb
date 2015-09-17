@@ -10,10 +10,30 @@ require "json"
 
 
 class MakeCsvData
+
+  ADDRESS_REGEXP = /\d+-\d+-\d+/
+
+  def initialize(xls_file_name)
+    @xls_sheet = Roo::Excel.new(xls_file_name).sheet(0)
+  end
+
+  def make_csv_file
+    csv_file = CSV.open("./csv_data/nursery_data.csv", "wb") do |csv_row|
+      @xls_sheet.each do |row|
+        #unless row.header_row?()
+          row[0] = row[0].to_i
+          json = get_geo_data(row)
+          format_json(json, row, csv_row)
+        #end
+      end
+    end
+  end
+
+  private
+
   def get_geo_data(row)
     address = row[3].gsub("－", "-")
-    regexp = /\d+-\d+-\d+/
-    address = address.split(regexp).first + regexp.match(address).to_s
+    address = address.split(ADDRESS_REGEXP).first + ADDRESS_REGEXP.match(address).to_s
     gapi = "https://maps.googleapis.com/maps/api/geocode/json"
     queries = "?address=%s,%s&language=ja" % [address, row[2]]
 
@@ -27,11 +47,12 @@ class MakeCsvData
       json
     end
   end
+
   def format_json(json, row, csv)
     if json["status"] == "OK"
       json["results"].each do |j|
         location = j["geometry"]["location"]
-        if row[6].is_a?(Integer) and row[7].is_a?(Integer)
+        if row[6].is_a?(Integer) && row[7].is_a?(Integer)
           row[6] = "%02d:%02d" % [row[6] / 3600, (row[6] % 3600) / 60]
           row[7] = "%02d:%02d" % [row[7] / 3600, (row[7] % 3600) / 60]
         end
@@ -48,17 +69,6 @@ class MakeCsvData
       csv << row
     end
   end
-  def make_csv_file(xls_sheet)
-    csv_file = CSV.open("./csv_data/nursery_data.csv", "wb") do |csv_row|
-      xls_sheet.each do |row|
-        #unless row.header_row?()
-          row[0] = row[0].to_i
-          json = get_geo_data(row)
-          format_json(json, row, csv_row)
-        #end
-      end
-    end
-  end
 end
 
 
@@ -68,7 +78,5 @@ else
   xls_file_name = ARGV[0]
 end
 
-mcd = MakeCsvData.new
-
-xls_sheet = Roo::Excel.new(xls_file_name).sheet(0)
-mcd.make_csv_file(xls_sheet)
+mcd = MakeCsvData.new(xls_file_name)
+mcd.make_csv_file
