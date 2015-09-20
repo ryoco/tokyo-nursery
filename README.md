@@ -16,7 +16,7 @@ Please download the [tokyo non-authorized nursery excel](http://www.fukushihoken
 You need to lunch redis.
 
 ```
-  rackup
+  bundle exec puma -C puma.rb
 ```
 
 then, access http://localhost:9292
