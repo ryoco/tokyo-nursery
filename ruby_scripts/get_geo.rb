@@ -7,24 +7,32 @@ require "csv"
 require "net/https"
 require "open-uri"
 require "json"
+require "logger"
 
 
 class MakeCsvData
 
   ADDRESS_REGEXP = /\d+-\d+-\d+/
 
-  def initialize(xls_file_name)
-    @xls_sheet = Roo::Excel.new(xls_file_name).sheet(0)
+  def initialize(xls_file_names, csv_file_name)
+    @logger = Logger.new(STDOUT)
+    @logger.level = Logger::DEBUG
+    @xls_sheets = []
+    xls_file_names.each do |xls_file_name|
+      @xls_sheets.push(Roo::Excel.new(xls_file_name).sheet(0))
+    end
+    @csv_file_name = csv_file_name
   end
 
   def make_csv_file
-    csv_file = CSV.open("./csv_data/nursery_data.csv", "wb") do |csv_row|
-      @xls_sheet.each do |row|
-        #unless row.header_row?()
-          row[0] = row[0].to_i
+    CSV.open(@csv_file_name, "wb") do |csv_row|
+      csv_row << @xls_sheets[0].each.to_a[0]
+      @xls_sheets.each_with_index do |xls_sheet, index|
+        xls_sheet.each.to_a[1..-1].each do |row|
+          row[0] = index * 1000 + row[0].to_i
           json = get_geo_data(row)
           format_json(json, row, csv_row)
-        #end
+        end
       end
     end
   end
@@ -43,7 +51,8 @@ class MakeCsvData
       request = Net::HTTP::Get.new(uri)
       response = http.request(request)
       json = JSON.parse(response.body)
-      sleep(1)
+      @logger.debug(json["status"])
+      sleep(0.3)
       json
     end
   end
@@ -73,10 +82,12 @@ end
 
 
 if ARGV.empty?
-  xls_file_name = "./baby.xls"
+  csv_file_name = "./csv_data/nursery_data.csv"
+  xls_file_names = ["./baby.xls", "./sonohoka.xls"]
 else
-  xls_file_name = ARGV[0]
+  csv_file_name = ARGV[0]
+  xls_file_names = ARGV[1..-1]
 end
 
-mcd = MakeCsvData.new(xls_file_name)
+mcd = MakeCsvData.new(xls_file_names, csv_file_name)
 mcd.make_csv_file

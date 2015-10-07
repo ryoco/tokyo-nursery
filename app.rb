@@ -29,7 +29,7 @@ class TokyoNursery < Sinatra::Base
     redis = Redis.new(:driver => :hiredis)
     if redis.dbsize <= 0
       read_csv = CSV.read("./csv_data/nursery_data.csv", {headers: false})
-      read_csv.each do |csv|
+      read_csv.each.to_a[1..-1].each do |csv|
         key = "nurseries-%d" % csv[0]
         redis.lpush(key, csv.to_a.reverse)
       end

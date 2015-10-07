@@ -6,6 +6,7 @@ gem "redis", "~> 3.0.1"
 gem "hiredis", "~> 0.6.0"
 gem "puma", "~> 2.14.0"
 gem "foreman"
+gem "logger"
 
 # for scripts
 gem "nokogiri", "~> 1.6.6.2"
