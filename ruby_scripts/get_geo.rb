@@ -52,7 +52,7 @@ class MakeCsvData
       request = Net::HTTP::Get.new(uri)
       response = http.request(request)
       json = JSON.parse(response.body)
-      @logger.debug(json["status"])
+      @logger.debug("%d:%s:%s" % [row[0], row[1], json["status"]])
       sleep(0.3)
       json
     end
