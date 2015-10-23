@@ -25,6 +25,12 @@ then, access http://localhost:9292
 
 Use `env.rb` file
 
+## TODO
+
+1. Fix UI
+2. Fix date formats
+3. Research google map API response ZERO_RESULTS
+
 ## License
 
 MIT

@@ -62,6 +62,7 @@ class MakeCsvData
     if json["status"] == "OK"
       json["results"].each do |j|
         location = j["geometry"]["location"]
+        row[1] = row[1].strip.gsub(/(\r\n|\r|\n)/," ")
         if row[6].is_a?(Integer) 
           row[6] = "%02d:%02d" % [row[6] / 3600, (row[6] % 3600) / 60]
         end

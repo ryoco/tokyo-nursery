@@ -6,3 +6,4 @@ vendor/
 tmp/
 csv_data/nursery_data.csv
 env.rb
+*.DS_Store
