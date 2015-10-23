@@ -8,6 +8,7 @@ require "net/https"
 require "open-uri"
 require "json"
 require "logger"
+require "date"
 
 
 class MakeCsvData
@@ -61,9 +62,14 @@ class MakeCsvData
     if json["status"] == "OK"
       json["results"].each do |j|
         location = j["geometry"]["location"]
-        if row[6].is_a?(Integer) && row[7].is_a?(Integer)
+        if row[6].is_a?(Integer) 
           row[6] = "%02d:%02d" % [row[6] / 3600, (row[6] % 3600) / 60]
+        end
+        if row[7].is_a?(Integer)
           row[7] = "%02d:%02d" % [row[7] / 3600, (row[7] % 3600) / 60]
+        end
+        if row[10].is_a?(Integer)
+          row[10] = DateTime.new(1899,12,30) + row[10].days
         end
         if row[12].nil?
           row[12] = "無"
