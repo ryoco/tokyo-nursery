@@ -21,6 +21,10 @@ You need to lunch redis.
 
 then, access http://localhost:9292
 
+## env file
+
+Use `env.rb` file
+
 ## License
 
 MIT
